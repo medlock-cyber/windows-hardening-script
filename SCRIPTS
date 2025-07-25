@@ -1,0 +1,47 @@
+📂 scripts/ Folder – Why It’s Important
+
+🔧 Technical Perspective
+
+The scripts/ folder holds the PowerShell tools that automate:
+> Auditing system configurations
+> Hardening the OS
+> Running compliance checks consistently across systems
+
+These scripts serve as your automated security engineer, applying policy decisions across multiple machines without human error or inconsistency.
+
+🛡️ How It Ties into GRC
+
+✅ Governance
+
+Scripts enforce policies and standards. For example:
+> If your policy says “UAC must be enabled,” 'audit.ps1' checks it, and 'harden.ps1' sets it if missing.
+> Ensures technical enforcement of governance decisions.
+
+📉 Risk Management
+
+Reduces risk by:
+> Identifying weak configurations (e.g., open ports, insecure services)
+> Applying hardening baselines
+
+Example: If Remote Desktop is enabled on all machines, that's a risk. 'audit.ps1' flags it. 'harden.ps1' can disable it.
+
+📋 Compliance
+
+Maps directly to frameworks like NIST 800-53, CIS Controls, or DISA STIG.
+Example:
+> NIST Control AC-2 (Account Management) ➝ audit.ps1 checks for inactive or excessive local accounts.
+> NIST Control SI-2 (Flaw Remediation) ➝ Script checks Windows update/hotfix status.
+
+This makes your scripts/ folder a technical proof of compliance tool — a key asset for auditors, ISSOs, and security teams.
+
+
+🧠 Why the scripts/ Folder Is Critical
+
+| Purpose                   | GRC Tie-In                           | Example                                    |
+| ------------------------- | ------------------------------------ | ------------------------------------------ |
+| Automates enforcement     | Ensures governance policy is applied | Checks if firewall is enabled              |
+| Detects misconfigurations | Identifies risk conditions           | Alerts if SMBv1 is enabled                 |
+| Documents system state    | Provides audit trail                 | CSV report shows current security posture  |
+| Applies controls          | Maps to NIST/CIS controls            | `harden.ps1` sets secure registry settings |
+
+

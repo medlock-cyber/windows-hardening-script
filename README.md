@@ -14,7 +14,7 @@ The purpose of this project is to audit and harden Windows systems using PowerSh
 | **3. System Hardening**        | Apply secure configurations via PowerShell to reduce risk and meet compliance goals.                                   |
 | **4. GRC Integration**         | Provide documentation that maps each audit or hardening step to security controls (e.g., NIST 800-53 or CIS Controls). |
 | **5. Reporting**               | Output results in readable formats (CSV/HTML/Markdown) for team sharing or audit evidence.                             |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------|
+
 
 
 

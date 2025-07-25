@@ -31,4 +31,21 @@ The purpose of this project is to audit and harden Windows systems using PowerSh
 
 > Bridges Technical & GRC Worlds: Combines scripting with control documentation for ISSOs, system admins, and auditors.
 
-##Part 1 will be the Audit Script Section##
+##Next will be the Audit Script Section##
+
+# 🔐 Windows Hardening Script Toolkit
+
+This project provides a set of PowerShell scripts for auditing and hardening Windows systems to improve security posture, support compliance efforts, and automate tedious security checks.
+
+## 📁 Project Structure
+
+| Folder/File                | Description |
+|---------------------------|-------------|
+| `scripts/`                | PowerShell scripts for auditing and hardening |
+| `baselines/`              | CIS and NIST baselines used for comparison |
+| `reports/`                | Example audit reports |
+| `docs/`                   | Compliance mapping, hardening checklists |
+| `README.md`               | This file |
+
+
+

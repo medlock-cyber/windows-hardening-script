@@ -45,3 +45,9 @@ This makes your scripts/ folder a technical proof of compliance tool — a key a
 | Applies controls          | Maps to NIST/CIS controls            | `harden.ps1` sets secure registry settings |
 
 
+
+
+
+
+
+

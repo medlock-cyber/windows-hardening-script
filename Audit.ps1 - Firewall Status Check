@@ -1,0 +1,66 @@
+🧰 Script: audit.ps1
+
+
+🎯 Purpose:
+The audit.ps1 script performs local security audits on a Windows system. It checks for weak configurations, collects system status info, and reports findings in a readable format (CSV or Markdown).
+
+This script will:
+> Help validate system security posture
+> Identify gaps against baselines (CIS, NIST 800-53, etc.)
+> Provide evidence for compliance or audit purposes
+
+✅ First 5 Security Checks (with GRC Relevance)
+
+We’ll begin with 5 foundational, high-value checks that:
+> Are easy to gather using PowerShell
+> Map directly to key NIST controls
+> Set you up for both technical and GRC credibility
+
+I will jump right in!!!
+
+
+🔍 Check #1: Windows Firewall Status
+
+🎯 Goal:
+Audit whether the Windows Defender Firewall is enabled for all network profiles: Domain, Private, and Public.
+
+Output the results to console and optionally to a report (we’ll add export logic later).
+
+🔐 GRC Control Mapping:
+NIST 800-53: SC-7 – Boundary Protection
+
+CIS Control: Control 9 – Limitation and Control of Network Ports, Protocols, and Services
+
+
+Heres what the first Script block will look like:
+
+# ============================
+# Windows Hardening Toolkit
+# audit.ps1 – Firewall Status Check
+# ============================
+
+Write-Host "`n[+] Checking Windows Firewall Status..." -ForegroundColor Cyan
+
+# Retrieve firewall status for all profiles
+$firewallProfiles = Get-NetFirewallProfile | Select-Object Name, Enabled
+
+# Loop through profiles and display results
+foreach ($profile in $firewallProfiles) {
+    $status = if ($profile.Enabled) { "ENABLED" } else { "DISABLED" }
+    $color = if ($profile.Enabled) { "Green" } else { "Red" }
+
+    Write-Host " - $($profile.Name) Profile: $status" -ForegroundColor $color
+}
+
+# Optional: Add to results object for later export
+$global:auditResults += foreach ($profile in $firewallProfiles) {
+    [PSCustomObject]@{
+        Check        = "Firewall Status"
+        Profile      = $profile.Name
+        Status       = if ($profile.Enabled) { "ENABLED" } else { "DISABLED" }
+        ControlID    = "SC-7"
+        Description  = "Windows Firewall should be enabled for all profiles."
+    }
+}
+
+

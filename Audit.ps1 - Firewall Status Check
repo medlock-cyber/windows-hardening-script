@@ -77,15 +77,30 @@ This is important because this script is a GRC guided move. I have to understand
 
 | Section                                                           | What It Does                                                | GRC Value?                                                         | Critical to the Script?               |            |
 | ----------------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------- | ---------- |
-| `# ============================ # Windows Hardening Toolkit` | **Comment headers** to organize the script visually         | ❌ No GRC value                                                     | ❌ Not required                        |            |
-| `Write-Host "`n\[+] Checking Windows Firewall Status..."\`        | Prints a heading to the screen in cyan                      | 🟡 Nice for audit readability                                      | ❌ Not critical                        |            |
-| \`\$firewallProfiles = Get-NetFirewallProfile                     | Select-Object Name, Enabled\`                               | **Core logic** – grabs firewall settings for Domain/Private/Public | ✅ GRC relevant                        | ✅ Required |
+| `# ============================ # Windows Hardening Toolkit`      | **Comment headers** to organize the script visually         | ❌ No GRC value                                                     | ❌ Not required                        |            |
+| `Write-Host "`n\[+] Checking Windows Firewall Status..."`         | Prints a heading to the screen in cyan                      | 🟡 Nice for audit readability                                      | ❌ Not critical                        |            |
+| `$firewallProfiles = Get-NetFirewallProfile                       | Select-Object Name, Enabled\`                               | **Core logic** – grabs firewall settings for Domain/Private/Public | ✅ GRC relevant                        | ✅ Required |
 | `foreach (...) { $status = ... }`                                 | Loops through each profile, checks if enabled               | ✅ Used to confirm compliance                                       | ✅ Required                            |            |
 | `Write-Host ... -ForegroundColor`                                 | Prints the result in green/red                              | 🟡 Helps visually during manual audits                             | ❌ Not needed for automation           |            |
 | `$global:auditResults += ...`                                     | Adds the result to a list for exporting to CSV/report later | ✅ Makes audit trail/exportable                                     | ✅ Optional but useful                 |            |
 | `ControlID = "SC-7"`                                              | GRC mapping to **NIST 800-53**                              | ✅ Required for compliance                                          | ✅ Required if you're showing mappings |            |
 
+Heres the thing, if you stripped it down to the bare essentials, here is what's technically necessary to just check the firewall:
+__________________________________________________________________________________________________________________________________
+$firewallProfiles = Get-NetFirewallProfile | Select-Object Name, Enabled
 
+foreach ($profile in $firewallProfiles) {
+    $status = if ($profile.Enabled) { "ENABLED" } else { "DISABLED" }
+    Write-Output "$($profile.Name) Profile: $status"
+}
+
+___________________________________________________________________________________________________________________________________
+
+But if you want this script to support GRC Activities, reporting and audit preparation, all the extra stuff like:
+> Control ID Mappings
+> Exportable data objects
+> Visual indicators for manual review
+... becomes valubale, even if its not need to juct check a setting.
 
 
 

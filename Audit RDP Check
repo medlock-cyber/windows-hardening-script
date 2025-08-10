@@ -1,1 +1,57 @@
+🧩 How RDP Fits In
+
+| Concept                 | Explanation                                                                                                                            |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| 🧪 **Audit Check**      | The script asks: *Is RDP turned ON or OFF?*                                                                                            |
+| 🛡️ **Security Risk**   | If RDP is **ON**, it could expose the system to **unauthorized access** — especially if it’s not protected by MFA, VPN, or monitoring. |
+| 📋 **Control Mapping**  | The script ties this check to **NIST Control AC-17**, which requires organizations to **monitor and control remote access**.           |
+| 📥 **Result Collected** | The outcome (Enabled/Disabled) is **saved in `$global:auditResults`** — a shared variable collecting results from every check.         |
+| 📤 **Reporting**        | Later, we can export `$global:auditResults` to a file (CSV, JSON) or display a final summary.                                          |
+
+Imagine that the `Audit.ps1` is like a security audit checklist. 
+| ✅ Check                  | ✔️ Yes / ❌ No | Mapped Control |
+| ------------------------ | ------------- | -------------- |
+| Is the firewall enabled? | Yes (✔️)      | SC-7           |
+| Is RDP disabled?         | Yes (✔️)      | AC-17          |
+| Is SMBv1 disabled?       | No (❌)        | SI-2           |
+
+
+Here is the full snippet that checks to see the status of RDP.
+________________________________________________________________________________
+
+# Step 2: Check if Remote Desktop is Enabled
+try {
+    $rdpStatus = Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\' -Name 'fDenyTSConnections'
+    if ($rdpStatus.fDenyTSConnections -eq 0) {
+        $rdpEnabled = "Enabled"
+    } else {
+        $rdpEnabled = "Disabled"
+    }
+    Write-Output "Remote Desktop: $rdpEnabled"
+    $global:auditResults += [PSCustomObject]@{
+        Check       = "Remote Desktop Enabled"
+        Status      = $rdpEnabled
+        Control     = "AC-17"
+        Description = "Ensure RDP is disabled if not explicitly required."
+    }
+} catch {
+    Write-Output "Remote Desktop: Unable to determine status."
+}
+____________________________________________________________________________________
+
+
+Here is the step by step breakdown. 
+
+| Line                                         | What It Does                                                                                            |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `try {`                                      | Starts a `try` block so the script doesn't crash if something goes wrong.                               |
+| `$rdpStatus = Get-ItemProperty ...`          | Reads a specific registry key that controls **whether RDP is enabled or disabled**.                     |
+| `fDenyTSConnections`                         | This value is `0` if RDP is **enabled**, and `1` if it’s **disabled**.                                  |
+| `if ($rdpStatus.fDenyTSConnections -eq 0)`   | Checks if RDP is **enabled** (value is `0`).                                                            |
+| `$rdpEnabled = "Enabled"`                    | Saves the string “Enabled” to use in logging/output.                                                    |
+| `Write-Output "Remote Desktop: $rdpEnabled"` | Prints the result to the terminal.                                                                      |
+| `$global:auditResults += ...`                | Appends the result to a global list of all audit results.                                               |
+| `catch { ... }`                              | If the registry can’t be read (e.g., access denied), the script won’t crash — it just prints a message. |
+
+
 
